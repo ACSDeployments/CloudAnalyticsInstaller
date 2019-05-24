@@ -248,6 +248,17 @@
 					"properties": {
 						"SiteWebAppIsNewInstall": "true"
 					}
+				},
+				{
+					"apiVersion": "2014-11-01",
+					"name": "appsettings",
+					"type": "config",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+					],
+					"properties": {
+						"Subscription": "[subscription()]"
+					}
 				}
 
 			]
