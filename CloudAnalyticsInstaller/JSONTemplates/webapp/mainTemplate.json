@@ -1,0 +1,50 @@
+{
+    
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    
+	"contentVersion": "1.0.0.0",
+
+	"parameters": {
+
+	},
+	
+    "resources": [
+			
+	
+		{
+			"apiVersion": "2015-08-01",
+			"name": "CloudAnalyticsDemoWebAppService",
+			"type": "Microsoft.Web/serverfarms",
+			"location": "East US 2",
+			"sku": {
+				"name": "S1",
+				"capacity": "0"
+			},
+			"properties": {
+				"name": "CloudAnalyticsDemoWebAppService"
+			}
+		},
+
+		{
+			"apiVersion": "2015-08-01",
+			"name": "CloudAnalyticsDemoWebApp",
+			"type": "Microsoft.Web/sites",
+			"location": "East US 2",
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/serverfarms','CloudAnalyticsDemoWebAppService')]"
+			],
+			"properties": {
+				"serverFarmId": "CloudAnalyticsDemoWebApp",
+				"siteConfig": {
+					"netFrameworkVersion": "v4.7",
+					"numberOfWorkers": "1",
+					"use32BitWorkerProcess": "false",
+					"webSocketsEnabled": "false",
+					"alwaysOn": "true"
+				}
+			}
+
+		}
+		
+    ]
+}

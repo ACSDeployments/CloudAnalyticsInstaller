@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudAnalyticsInstaller", "CloudAnalyticsInstaller\CloudAnalyticsInstaller.csproj", "{9533D2CE-E908-4EA8-97AB-A99621B53CF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACSDeploymentsUniqueNameValidationService", "ACSDeploymentsUniqueNameValidationService\ACSDeploymentsUniqueNameValidationService.csproj", "{A640A0AE-93B8-48B7-AE27-B1EF5EAE29D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9533D2CE-E908-4EA8-97AB-A99621B53CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9533D2CE-E908-4EA8-97AB-A99621B53CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9533D2CE-E908-4EA8-97AB-A99621B53CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A640A0AE-93B8-48B7-AE27-B1EF5EAE29D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A640A0AE-93B8-48B7-AE27-B1EF5EAE29D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A640A0AE-93B8-48B7-AE27-B1EF5EAE29D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A640A0AE-93B8-48B7-AE27-B1EF5EAE29D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

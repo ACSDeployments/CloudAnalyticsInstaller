@@ -237,7 +237,17 @@
 						}
 					}
 				},
-
+				{
+					"apiVersion": "2014-11-01",
+					"name": "appsettings",
+					"type": "config",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+					],
+					"properties": {
+						"WEBSITE_RUN_FROM_ZIP": "https://acsarmtemplates.blob.core.windows.net/virtualmachines/WebDeployFromZip.zip?st=2019-05-24T17%3A02%3A09Z&se=2019-05-25T17%3A02%3A09Z&sp=rl&sv=2018-03-28&sr=b&sig=2uCwi%2BHLDrAYKJuPdSLDeabO8qIFOhj3XB0wbYFQmEE%3D"
+					}
+				},
 				{
 					"apiVersion": "2014-11-01",
 					"name": "appsettings",
@@ -249,6 +259,7 @@
 						"SiteWebAppIsNewInstall": "true"
 					}
 				},
+
 				{
 					"apiVersion": "2014-11-01",
 					"name": "appsettings",

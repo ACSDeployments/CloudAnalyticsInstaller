@@ -1,0 +1,50 @@
+﻿{
+					"apiVersion": "2014-11-01",
+					"name": "appsettings",
+					"type": "config",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+					],
+					"properties": {
+						"WEBSITE_RUN_FROM_ZIP": "https://acsarmtemplates.blob.core.windows.net/virtualmachines/WebDeployFromZip.zip?st=2019-05-24T17%3A02%3A09Z&se=2019-05-25T17%3A02%3A09Z&sp=rl&sv=2018-03-28&sr=b&sig=2uCwi%2BHLDrAYKJuPdSLDeabO8qIFOhj3XB0wbYFQmEE%3D"
+					}
+				},
+
+
+				  "location": "[location()]",
+
+      "basicsResourcePrefix": "[basics('basicsResourcePrefix')]",
+
+      "basicsEnvSuffix": "[basics('basicsEnvSuffix')]",
+
+
+ 
+
+
+      "sqlServerName": "[steps('sqlConfig').sqlServerName]",
+
+      "sqlServerLogin": "[steps('sqlConfig').sqlServerLogin]",
+
+      "sqlServerPassword": "[steps('sqlConfig').sqlServerPassword]",
+
+      "sqlServerEdition": "[steps('sqlConfig').sqlServerEdition]",
+
+      "sqlDbName": "[steps('sqlConfig').sqlDbName]",
+
+
+ 
+
+
+      "appPlanName": "[steps('appConfig').appPlanName]",
+
+      "appPlanTier": "[steps('appConfig').appPlanTier]",
+
+      "appServiceName": "[steps('appConfig').appServiceName]",
+
+
+ 
+
+
+      "fullServerName": "[concat(basics('basicsResourcePrefix'), '-', steps('sqlConfig').sqlServerName, '-', basics('basicsEnvSuffix'))]",
+
+      "fullAppServiceName": "[concat(basics('basicsResourcePrefix'), '-', steps('appConfig').appServiceName, '-', basics('basicsEnvSuffix'))]"
