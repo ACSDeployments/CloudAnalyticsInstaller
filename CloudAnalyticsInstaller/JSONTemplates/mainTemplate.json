@@ -1,0 +1,195 @@
+{
+
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+
+	"contentVersion": "1.0.0.0",
+
+	"parameters": {
+
+		"resourcesLocation": {
+			"type": "string",
+			"defaultValue": "East US 2",
+			"metadata": {
+				"description": "The Location all resources in the deployment will have."
+			}
+		},
+
+		"siteWebAppName": {
+			"type": "string",
+			"defaultValue": "CloudAnalyticsWebAppInstaller",
+			"metadata": {
+				"description": "The name of the Web App to be deployed."
+			}
+		},
+		"siteWebAppConfigurationNetFrameworkVersion": {
+			"type": "string",
+			"defaultValue": "v4.7",
+			"metadata": {
+				"description": "The Dot Net Framework Version for the Web App to be deployed."
+			}
+		},
+		"siteWebAppConfigurationNumberOfWorkerProcesses": {
+			"type": "int",
+			"defaultValue": 1,
+			"metadata": {
+				"description": "The number of Worker Processes for the Web App to be deployed."
+			}
+		},
+		"siteWebAppConfigurationUse32BitWorkerProcess": {
+			"type": "bool",
+			"defaultValue": true,
+			"metadata": {
+				"description": "If the Web App to be deployed should be 32 or 64 bit (false for 64bit/true for 32bit)."
+			}
+		},
+		"siteWebAppConfigurationWebSocketsEnabled": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "If the Web App to be deployed should have Web Sockets enabled (false for off/true for on)."
+			}
+		},
+		"siteWebAppConfigurationAlwaysOn": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "If the Web App to be deployed should be Always On (false for off/true for on)."
+			}
+		},
+		"siteWebAppRepoURL": {
+			"type": "string",
+			"defaultValue": "https://github.com/ACSDeployments/CloudAnalyticsInstaller.git",
+			"metadata": {
+				"description": "The URL for the GitHub repository that contains the web app project to deploy."
+			}
+		},
+		"siteWebAppRepoBranch": {
+			"type": "string",
+			"defaultValue": "master",
+			"metadata": {
+				"description": "The branch of the GitHub repository to use."
+			}
+		},
+		"siteWebAppRepoIsManualIntegration": {
+			"type": "bool",
+			"defaultValue": true,
+			"metadata": {
+				"description": "If the GitHub repository should use Continuous Delivery (true for off/false for on)."
+			}
+		},
+		"siteWebAppRepoDeploymentRollbackEnabled": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "If the resources should be deleted if the Deployment Fails (false for no/true for yes)."
+			}
+		},
+		"siteWebAppRepoIsMercurial": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "Mercurial or Git repository type (false for Git/true for Mercurial)."
+			}
+		},
+
+		"siteAppServiceName": {
+			"type": "string",
+			"defaultValue": "CloudAnalyticsWebAppSPInstaller",
+			"metadata": {
+				"description": "The name of the App Service Plan for the Web App to be deployed."
+			}
+		},
+
+		"siteAppServiceSKU": {
+			"type": "string",
+			"defaultValue": "F1",
+			"metadata": {
+				"description": "The SKU type for the Web App Service Plan to be deployed."
+			}
+		},
+		"siteAppServiceSKUCapacity": {
+			"type": "string",
+			"defaultValue": "0",
+			"metadata": {
+				"description": "The Capacity for the Web App Service Plan to be deployed."
+			}
+		},
+
+		"sqlServerName": {
+			"type": "string",
+			"defaultValue": "servicenowconnectsql",
+			"metadata": {
+				"description": "The name of the SQL Server for the Web App to be deployed."
+			}
+		}
+	},
+
+	"resources": [
+
+		{
+			"apiVersion": "2015-08-01",
+			"name": "[parameters('siteAppServiceName')]",
+			"type": "Microsoft.Web/serverfarms",
+			"location": "[parameters('resourcesLocation')]",
+			"sku": {
+				"name": "[parameters('siteAppServiceSKU')]",
+				"capacity": "[parameters('siteAppServiceSKUCapacity')]"
+			},
+			"properties": {
+				"name": "[parameters('siteAppServiceName')]"
+			}
+		},
+
+		{
+			"apiVersion": "2015-08-01",
+			"name": "[parameters('siteWebAppName')]",
+			"type": "Microsoft.Web/sites",
+			"location": "[parameters('resourcesLocation')]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/serverfarms', parameters('siteAppServiceName'))]"
+			],
+			"properties": {
+				"serverFarmId": "[parameters('siteAppServiceName')]",
+				"siteConfig": {
+					"netFrameworkVersion": "[parameters('siteWebAppConfigurationNetFrameworkVersion')]",
+					"numberOfWorkers": "[parameters('siteWebAppConfigurationNumberOfWorkerProcesses')]",
+					"use32BitWorkerProcess": "[parameters('siteWebAppConfigurationUse32BitWorkerProcess')]",
+					"webSocketsEnabled": "[parameters('siteWebAppConfigurationWebSocketsEnabled')]",
+					"alwaysOn": "[parameters('siteWebAppConfigurationAlwaysOn')]"
+				}
+			},
+			"resources": [
+				{
+					"apiVersion": "2016-03-01",
+					"type": "config",
+					"name": "connectionstrings",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('siteWebAppName'))]"
+					],
+					"properties": {
+						"[parameters('siteWebAppConfigurationConnectionStringName')]": {
+							"value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('sqlServerDatabaseName'), ';User Id=', parameters('sqlServerLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlServerPassword'), ';')]",
+							"type": "SQLAzure"
+						}
+					}
+				},
+				{
+					"apiVersion": "2015-08-01",
+					"name": "web",
+					"type": "sourcecontrols",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/serverfarms', parameters('siteAppServiceName'))]",
+						"[resourceId('Microsoft.Web/Sites', parameters('siteWebAppName'))]"
+					],
+					"properties": {
+						"repoUrl": "[parameters('siteWebAppRepoURL')]",
+						"branch": "[parameters('siteWebAppRepoBranch')]",
+						"IsManualIntegration": "[parameters('siteWebAppRepoIsManualIntegration')]"
+					}
+				}
+
+			]
+		}
+
+	]
+}
