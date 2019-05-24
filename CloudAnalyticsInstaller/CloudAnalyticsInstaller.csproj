@@ -95,8 +95,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JSONTemplates\createUiDefinition.json" />
-    <Content Include="JSONTemplates\mainTemplate.json" />
+    <Content Include="JSONTemplates\option2\createUiDefinition.json" />
+    <Content Include="JSONTemplates\option2\mainTemplate.json" />
+    <Content Include="JSONTemplates\option1\createUiDefinition.json" />
+    <Content Include="JSONTemplates\option1\mainTemplate.json" />
+    <Content Include="JSONTemplates\option3\createUiDefinition.json" />
+    <Content Include="JSONTemplates\option3\mainTemplate.json" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

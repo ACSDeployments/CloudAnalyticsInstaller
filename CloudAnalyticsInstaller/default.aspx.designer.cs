@@ -58,6 +58,24 @@ namespace CloudAnalyticsInstaller {
         protected global::System.Web.UI.WebControls.TextBox _txtResourceGroup;
         
         /// <summary>
+        /// _lblSQLServerEdition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label _lblSQLServerEdition;
+        
+        /// <summary>
+        /// _ddlSQLServerEdition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList _ddlSQLServerEdition;
+        
+        /// <summary>
         /// _lblSSQLServerName control.
         /// </summary>
         /// <remarks>

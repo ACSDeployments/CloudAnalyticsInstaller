@@ -2,6 +2,7 @@
 using Microsoft.Rest;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -25,10 +26,73 @@ namespace CloudAnalyticsInstaller
 			try
 			{
 
-				foreach( string s in Request.Headers.AllKeys )
+				try
 				{
-					Response.Write( s + ": " + Request.Headers[ s ].ToString() + "<BR><BR>" );
+					_ddlLocation.SelectedValue = ConfigurationManager.AppSettings[ "setupLocation" ].ToString();
 				}
+				catch { }
+				try
+				{
+					_txtSQLServerName.Text = ConfigurationManager.AppSettings[ "setupsqlServerName" ].ToString();
+				}
+				catch{}
+
+				try
+				{
+					_txtSQLServerLogin.Text = ConfigurationManager.AppSettings[ "setupsqlServerLogin" ].ToString();
+				}
+				catch
+				{ }
+
+				try
+				{
+					_txtSQLServerPassword.Text = ConfigurationManager.AppSettings[ "setupsqlServerPassword" ].ToString();
+				}
+				catch { }
+
+				try
+				{
+					_txtSQLServerName.Text = ConfigurationManager.AppSettings[ "setupsqlDbName" ].ToString();
+				}
+				catch
+				{ }
+
+				try
+				{
+					_ddlSQLServerEdition.SelectedValue = ConfigurationManager.AppSettings[ "setupsqlServerEdition" ].ToString();
+				}
+				catch { }
+
+				try
+				{
+					_txtAppServicePlanName.Text = ConfigurationManager.AppSettings[ "setupappPlanName" ].ToString();
+				}
+				catch
+				{
+				}
+
+				try
+				{
+					_txtWebAppName.Text = ConfigurationManager.AppSettings[ "setupappServiceName" ].ToString();
+				}
+				catch
+				{
+
+				}
+
+				//foreach( string s in Request.Headers.AllKeys )
+				//{
+				//	Response.Write( s + ": " + Request.Headers[ s ].ToString() + "<BR><BR>" );
+				//}
+
+				//"setupLocation": "[parameters('location')]",
+				//"setupsqlServerName": "[parameters('sqlServerName')]",
+				//"setupsqlServerLogin": "[parameters('sqlServerLogin')]",
+				//"setupsqlServerPassword": "[parameters('sqlServerPassword')]",
+				//"setupsqlServerEdition": "[parameters('sqlServerEdition')]",
+				//"setupsqlDbName": "[parameters('sqlDbName')]",
+				//"setupappServiceName": "[parameters('appServiceName')]",
+				//"setupappPlanName": "[parameters('appPlanName')]"
 
 				//_client.DefaultRequestHeaders.Accept.Clear();
 				//_client.DefaultRequestHeaders.Authorization =

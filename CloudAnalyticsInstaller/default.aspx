@@ -29,12 +29,25 @@
 						</asp:DropDownList>
 					</td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<td style="text-align:right;">
 						<asp:Label ID="_lblResourceGroup" runat="server" Text="Resource Group:"></asp:Label>
 					</td>
 					<td>
 						<asp:TextBox ID="_txtResourceGroup" runat="server" Text=""></asp:TextBox>
+					</td>
+				</tr>-->
+				<tr>
+					<td style="text-align:right;">
+						<asp:Label ID="_lblSQLServerEdition" runat="server" Text="SQL Server Edition:"></asp:Label>
+					</td>
+					<td>
+						<asp:DropDownList ID="_ddlSQLServerEdition" runat="server" >
+							<asp:ListItem></asp:ListItem>
+							<asp:ListItem Text="Basic" Value="Basic"></asp:ListItem>
+							<asp:ListItem Text="Standard" Value="Standard"></asp:ListItem>
+							<asp:ListItem Text="Premium" Value="Premium"></asp:ListItem>
+						</asp:DropDownList>
 					</td>
 				</tr>
 				<tr>
@@ -69,6 +82,7 @@
 						<asp:TextBox ID="_txtSQLServerDatabase" runat="server"></asp:TextBox>
 					</td>
 				</tr>
+
 				<tr>
 					<td style="text-align:right;">
 						<asp:Label ID="_lblAppServicePlanName" runat="server" Text="Web App Service Plan Name"></asp:Label>

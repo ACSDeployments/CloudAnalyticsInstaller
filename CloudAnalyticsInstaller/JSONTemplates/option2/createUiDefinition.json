@@ -1,0 +1,138 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+
+    ],
+    "steps": [
+      {
+        "name": "sqlConfig",
+        "label": "SQL Server Settings",
+        "subLabel": {
+          "preValidation": "Configure the SQL Server settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "SQL Server Settings",
+        "elements": [
+			{
+				"name": "sqlServerName",
+				"type": "Microsoft.Common.TextBox",
+				"label": "SQL Server Name",
+				"toolTip": "The name of the SQL Server.",
+				"defaultValue": "cloudanalyticssqlserver",
+				"constraints": {
+					"required": true,
+					"validationMessage": "TODO"
+				}
+			},
+			{
+				"name": "sqlServerLogin",
+				"type": "Microsoft.Compute.UserNameTextBox",
+				"label": "SQL Login",
+				"toolTip": "Login name for the SQL Server",
+				"defaultValue": "cloudanalytics2019",
+				"constraints": {
+					"required": true,
+					"validationMessage": "The specified user name is not allowed.  User names must meet length...TODO"
+				},
+				"osPlatform": "Windows"
+			},
+			{
+				"name": "sqlServerPassword",
+				"type": "Microsoft.Common.PasswordBox",
+				"defaultValue": "4cs1tsmC0nn3ct$",
+				"label": {
+					"password": "Password",
+					"confirmPassword": "Confirm Password"
+				},
+				"toolTip": "SQL Server Login Password",
+				"constraints": {
+					"required": true,
+					"validationMessage": "The password must be between 12 and 68 characters long, and contain .....TODO"
+				},
+				"options": {
+					"hideConfirmation": false
+				}
+			},
+			{
+				"name": "sqlServerEdition",
+				"type": "Microsoft.Common.DropDown",
+				"label": "SQL Server Edition",
+				"toolTip": "SKU or Edition of SQL Server",
+				"defaultValue": "Standard",
+				"constraints": {
+					"allowedValues": [
+						{
+							"label": "Standard",
+							"value": "Standard"
+						},
+						{
+							"label": "Premium",
+							"value": "Premium"
+						}
+					]
+				}
+			},
+          {
+            "name": "sqlDbName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Azure SQL Database Name",
+            "toolTip": "The name of the Azure SQL Database.",
+            "defaultValue": "CloudAnalytics",
+            "constraints": {
+              "required": true,
+              "validationMessage": "The password must be between 12 and 68 characters long, and contain .....TODO"
+            }
+          }
+        ]
+      },
+      {
+        "name": "appConfig",
+        "label": "Application Settings",
+        "subLabel": {
+          "preValidation": "Configure the Application settings",
+          "postValidation": "Done"
+        },
+        "bladeTitle": "Application Settings",
+        "elements": [
+			{
+				"name": "appPlanName",
+				"type": "Microsoft.Common.TextBox",
+				"label": "App Service Plan Name",
+				"toolTip": "The name of the SQL Server.",
+				"defaultValue": "CloudAnalyticsWebAppService",
+				"constraints": {
+					"required": true,
+					"validationMessage": "TODO"
+				}
+			},
+			{
+				"name": "appServiceName",
+				"type": "Microsoft.Common.TextBox",
+				"label": "Web App Name",
+				"toolTip": "The name of the SQL Server.",
+				"defaultValue": "CloudAnalyticsWebApp",
+				"constraints": {
+					"required": true,
+					"validationMessage": "TODO"
+				}
+			}
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+
+      "sqlServerName": "[steps('sqlConfig').sqlServerName]",
+      "sqlServerLogin": "[steps('sqlConfig').sqlServerLogin]",
+      "sqlServerPassword": "[steps('sqlConfig').sqlServerPassword]",
+      "sqlServerEdition": "[steps('sqlConfig').sqlServerEdition]",
+      "sqlDbName": "[steps('sqlConfig').sqlDbName]",
+
+      "appPlanName": "[steps('appConfig').appPlanName]",
+      "appServiceName": "[steps('appConfig').appServiceName]"
+    }
+  }
+}

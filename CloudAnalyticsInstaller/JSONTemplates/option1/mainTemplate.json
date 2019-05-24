@@ -1,0 +1,257 @@
+{
+    
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    
+	"contentVersion": "1.0.0.0",
+
+	"parameters": {
+
+		"location": { "type": "string" },
+		"sqlServerName": { "type": "string" },
+		"sqlServerLogin": { "type": "string" },
+		"sqlServerPassword": { "type": "string" },
+		"sqlServerEdition": { "type": "string" },
+		"sqlDbName": { "type": "string" },
+		"appServiceName": { "type": "string" },
+		"appPlanName": { "type": "string" },
+
+		"siteWebAppConfigurationNetFrameworkVersion": {
+			"type": "string",
+			"defaultValue": "v4.7",
+			"metadata": {
+				"description": "The Dot Net Framework Version for the Web App to be deployed."
+			}
+		},
+		"siteWebAppConfigurationNumberOfWorkerProcesses": {
+			"type": "int",
+			"defaultValue": 1,
+			"metadata": {
+				"description": "The number of Worker Processes for the Web App to be deployed."
+			}
+		},
+		"siteWebAppConfigurationUse32BitWorkerProcess": {
+			"type": "bool",
+			"defaultValue": false,
+			"metadata": {
+				"description": "If the Web App to be deployed should be 32 or 64 bit (false for 64bit/true for 32bit)."
+			}
+		},
+		"siteWebAppConfigurationWebSocketsEnabled": {
+			"type": "bool",
+			"defaultValue": true,
+			"metadata": {
+				"description": "If the Web App to be deployed should have Web Sockets enabled (false for off/true for on)."
+			}
+		},
+		"siteWebAppConfigurationAlwaysOn": {
+			"type": "bool",
+			"defaultValue": true,
+			"metadata": {
+				"description": "If the Web App to be deployed should be Always On (false for off/true for on)."
+			}
+		},
+		"siteWebAppConfigurationConnectionStringName": {
+			"type": "string",
+			"defaultValue": "CloudAnalyticsWebAppConnectionString",
+			"metadata": {
+				"description": "The name of the Database Connection String for Web App to be deployed. The Connection String Will be added to the Web App during deployment."
+			}
+		},
+
+		"siteAppServiceSKU": {
+			"type": "string",
+			"defaultValue": "S1",
+			"metadata": {
+				"description": "The SKU type for the Web App Service Plan to be deployed."
+			}
+		},
+		"siteAppServiceSKUCapacity": {
+			"type": "string",
+			"defaultValue": "0",
+			"metadata": {
+				"description": "The Capacity for the Web App Service Plan to be deployed."
+			}
+		},
+
+		"sqlServerVersion": {
+			"type": "string",
+			"defaultValue": "12.0",
+			"metadata": {
+				"description": "The SQL Server Version for the Web App to be deployed."
+			}
+		},
+
+		"sqlServerFirewallRuleName": {
+			"type": "string",
+			"defaultValue": "AllowAllWindowsAzureIps",
+			"metadata": {
+				"description": "The Firewall Rule Name of Allowed IP Addresses to connect to the SQL Server for the Web App to be deployed."
+			}
+		},
+		"sqlServerFirewallRuleAllowedIPsStart": {
+			"type": "string",
+			"defaultValue": "0.0.0.0",
+			"metadata": {
+				"description": "The start range of Allowed IP Addresses to connect to the SQL Server for the Web App to be deployed."
+			}
+		},
+		"sqlServerFirewallRuleAllowedIPsEnd": {
+			"type": "string",
+			"defaultValue": "0.0.0.0",
+			"metadata": {
+				"description": "The end range of Allowed IP Addresses to connect to the SQL Server for the Web App to be deployed."
+			}
+		},
+
+		"sqlServerDatabaseTransparentDataEncryption": {
+			"type": "string",
+			"defaultValue": "Enabled",
+			"metadata": {
+				"description": "The SQL Server Database Transparent Data Encryption setting for the Web App to be deployed. (Enabled/Disabled)"
+			}
+		},
+		"sqlServerDatabaseCollation": {
+			"type": "string",
+			"defaultValue": "SQL_Latin1_General_CP1_CI_AS",
+			"metadata": {
+				"description": "The SQL Server Database Collation for the Web App to be deployed."
+			}
+		},
+		"sqlServerDatabaseMaxSizeInBytes": {
+			"type": "string",
+			"defaultValue": "2147483648",
+			"metadata": {
+				"description": "The SQL Server Database Collation for the Web App to be deployed."
+			}
+		}
+
+	},
+	
+    "resources": [
+			
+	   {
+      "name": "[parameters('sqlServerName')]",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2014-04-01-preview",
+      "location": "[parameters('location')]",
+      "tags": {
+        "displayName": "SqlServer"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('sqlServerLogin')]",
+        "administratorLoginPassword": "[parameters('sqlServerPassword')]",
+        "version": "12.0"
+      },
+      "resources": [
+		{
+			"name": "[parameters('sqlDbName')]",
+			"type": "databases",
+			"apiVersion": "2015-01-01",
+			"location": "[parameters('location')]",
+			"tags": {
+				"displayName": "Database"
+			},
+			"properties": {
+				"edition": "[parameters('sqlServerEdition')]",
+				"collation": "[parameters('sqlServerDatabaseCollation')]",
+				"requestedServiceObjectiveName": "[parameters('sqlServerEdition')]"
+			},
+			"dependsOn": [
+				"[parameters('sqlServerName')]"
+			],
+			"resources": [
+				{
+					"comments": "Transparent Data Encryption",
+					"name": "current",
+					"type": "transparentDataEncryption",
+					"apiVersion": "2014-04-01-preview",
+					"properties": {
+						"status": "[parameters('sqlServerDatabaseTransparentDataEncryption')]"
+					},
+					"dependsOn": [
+						"[parameters('sqlDbName')]"
+					]
+				}
+			]
+		},
+        {
+          "name": "[parameters('sqlServerFirewallRuleName')]",
+          "type": "firewallrules",
+          "apiVersion": "2014-04-01",
+          "location": "[parameters('location')]",
+          "properties": {
+            "endIpAddress": "[parameters('sqlServerFirewallRuleAllowedIPsStart')]",
+            "startIpAddress": "[parameters('sqlServerFirewallRuleAllowedIPsEnd')]"
+          },
+          "dependsOn": [
+            "[parameters('sqlServerName')]"
+          ]
+        }
+      ]
+    },
+
+		{
+			"apiVersion": "2015-08-01",
+			"name": "[parameters('appPlanName')]",
+			"type": "Microsoft.Web/serverfarms",
+			"location": "[parameters('location')]",
+			"sku": {
+				"name": "[parameters('siteAppServiceSKU')]",
+				"capacity": "[parameters('siteAppServiceSKUCapacity')]"
+			},
+			"properties": {
+				"name": "[parameters('appPlanName')]"
+			}
+		},
+
+		{
+			"apiVersion": "2015-08-01",
+			"name": "[parameters('appServiceName')]",
+			"type": "Microsoft.Web/sites",
+			"location": "[parameters('location')]",
+			"dependsOn": [
+				"[resourceId('Microsoft.Web/serverfarms', parameters('appPlanName'))]"
+			],
+			"properties": {
+				"serverFarmId": "[parameters('appPlanName')]",
+				"siteConfig": {
+					"netFrameworkVersion": "[parameters('siteWebAppConfigurationNetFrameworkVersion')]",
+					"numberOfWorkers": "[parameters('siteWebAppConfigurationNumberOfWorkerProcesses')]",
+					"use32BitWorkerProcess": "[parameters('siteWebAppConfigurationUse32BitWorkerProcess')]",
+					"webSocketsEnabled": "[parameters('siteWebAppConfigurationWebSocketsEnabled')]",
+					"alwaysOn": "[parameters('siteWebAppConfigurationAlwaysOn')]"
+				}
+			},
+			"resources": [
+				{
+					"apiVersion": "2016-03-01",
+					"type": "config",
+					"name": "connectionstrings",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+					],
+					"properties": {
+						"[parameters('siteWebAppConfigurationConnectionStringName')]": {
+							"value": "[concat('Data Source=tcp:', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ',1433;Initial Catalog=', parameters('sqlDbName'), ';User Id=', parameters('sqlServerLogin'), '@', reference(concat('Microsoft.Sql/servers/', parameters('sqlServerName'))).fullyQualifiedDomainName, ';Password=', parameters('sqlServerPassword'), ';')]",
+							"type": "SQLAzure"
+						}
+					}
+				},
+
+				{
+					"apiVersion": "2014-11-01",
+					"name": "appsettings",
+					"type": "config",
+					"dependsOn": [
+						"[resourceId('Microsoft.Web/Sites', parameters('appServiceName'))]"
+					],
+					"properties": {
+						"SiteWebAppIsNewInstall": "true"
+					}
+				}
+
+			]
+		}
+		
+    ]
+}
